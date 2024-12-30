@@ -1,30 +1,41 @@
-import db from "@/db/db"
-import { NextRequest, NextResponse } from "next/server"
-import fs from "fs/promises"
+import db from "@/db/db";
+import { NextRequest, NextResponse } from "next/server";
+import fs from "fs/promises";
 
 export async function GET(
   req: NextRequest,
-  {
-    params: { downloadVerificationId },
-  }: { params: { downloadVerificationId: string } }
+  { params }: { params: { id: string } }
 ) {
-  const data = await db.downloadVerification.findUnique({
-    where: { id: downloadVerificationId, expiresAt: { gt: new Date() } },
-    select: { product: { select: { filePath: true, name: true } } },
-  })
+  const { id } = params;
 
-  if (data == null) {
-    return NextResponse.redirect(new URL("/products/download/expired", req.url))
+  if (!id || typeof id !== "string") {
+    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
   }
 
-  const { size } = await fs.stat(data.product.filePath)
-  const file = await fs.readFile(data.product.filePath)
-  const extension = data.product.filePath.split(".").pop()
+  const product = await db.product.findUnique({
+    where: { id },
+    select: { filePath: true, name: true },
+  });
 
-  return new NextResponse(file, {
-    headers: {
-      "Content-Disposition": `attachment; filename="${data.product.name}.${extension}"`,
-      "Content-Length": size.toString(),
-    },
-  })
+  if (!product) {
+    return new NextResponse("Product not found", { status: 404 });
+  }
+
+  try {
+    const { size } = await fs.stat(product.filePath);
+    const file = await fs.readFile(product.filePath);
+    const extension = product.filePath.split(".").pop();
+    const safeName = product.name.replace(/[^a-zA-Z0-9-_]/g, "_");
+
+    return new NextResponse(file, {
+      headers: {
+        "Content-Disposition": `attachment; filename="${safeName}.${extension}"`,
+        "Content-Length": size.toString(),
+        "Content-Type": "application/octet-stream",
+      },
+    });
+  } catch (error) {
+    console.error("File system error:", error);
+    return new NextResponse("File not found", { status: 404 });
+  }
 }
