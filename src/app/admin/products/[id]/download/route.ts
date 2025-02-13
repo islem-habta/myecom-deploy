@@ -20,7 +20,7 @@ export async function GET(req: NextRequest, { params: { id } }) {
     const file = await fs.readFile(product.filePath);
     const extension = product.filePath.split(".").pop();
     const safeName = product.name.replace(/[^a-zA-Z0-9-_]/g, "_");
-
+     //i did this
     return new NextResponse(file, {
       headers: {
         "Content-Disposition": `attachment, filename="${safeName}.${extension}"`,
