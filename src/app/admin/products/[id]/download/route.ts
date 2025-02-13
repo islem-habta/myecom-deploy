@@ -23,7 +23,7 @@ export async function GET(req: NextRequest, { params: { id } }) {
 
     return new NextResponse(file, {
       headers: {
-        "Content-Disposition": `attachment; filename="${safeName}.${extension}"`,
+        "Content-Disposition": `attachment, filename="${safeName}.${extension}"`,
         "Content-Length": size.toString(),
       },
     });
