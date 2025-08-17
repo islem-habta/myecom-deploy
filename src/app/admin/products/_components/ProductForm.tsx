@@ -20,8 +20,14 @@ export function ProductForm({ product }: { product?: Product | null }) {
     product?.priceInCents
   )
 
+  // Check if error is a simple string or form errors object
+  const isFormError = error && typeof error === 'object' && !('error' in error)
+
   return (
     <form action={action} className="space-y-8">
+      {!isFormError && error && typeof error === 'object' && 'error' in error && (
+        <div className="text-destructive">{error.error}</div>
+      )}
       <div className="space-y-2">
         <Label htmlFor="name">Name</Label>
         <Input
@@ -31,7 +37,7 @@ export function ProductForm({ product }: { product?: Product | null }) {
           required
           defaultValue={product?.name || ""}
         />
-        {error.name && <div className="text-destructive">{error.name}</div>}
+        {isFormError && error.name && <div className="text-destructive">{error.name}</div>}
       </div>
       <div className="space-y-2">
         <Label htmlFor="priceInCents">Price In Cents</Label>
@@ -46,7 +52,7 @@ export function ProductForm({ product }: { product?: Product | null }) {
         <div className="text-muted-foreground">
           {formatCurrency((priceInCents || 0) / 100)}
         </div>
-        {error.priceInCents && (
+        {isFormError && error.priceInCents && (
           <div className="text-destructive">{error.priceInCents}</div>
         )}
       </div>
@@ -58,7 +64,7 @@ export function ProductForm({ product }: { product?: Product | null }) {
           required
           defaultValue={product?.description}
         />
-        {error.description && (
+        {isFormError && error.description && (
           <div className="text-destructive">{error.description}</div>
         )}
       </div>
@@ -68,7 +74,7 @@ export function ProductForm({ product }: { product?: Product | null }) {
         {product != null && (
           <div className="text-muted-foreground">{product.filePath}</div>
         )}
-        {error.file && <div className="text-destructive">{error.file}</div>}
+        {isFormError && error.file && <div className="text-destructive">{error.file}</div>}
       </div>
       <div className="space-y-2">
         <Label htmlFor="image">Image</Label>
@@ -81,7 +87,7 @@ export function ProductForm({ product }: { product?: Product | null }) {
             alt="Product Image"
           />
         )}
-        {error.image && <div className="text-destructive">{error.image}</div>}
+        {isFormError && error.image && <div className="text-destructive">{error.image}</div>}
       </div>
       <SubmitButton />
     </form>
