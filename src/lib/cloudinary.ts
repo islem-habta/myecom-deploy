@@ -9,7 +9,7 @@ cloudinary.config({
 export default cloudinary;
 
 // Helper function to upload files
-export const uploadToCloudinary = async (file: Buffer, folder: string = 'ecommerce') => {
+export const uploadToCloudinary = async (file: Buffer, folder: string = 'ecommerce'): Promise<{ secure_url: string; public_id: string }> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload_stream(
       {
@@ -19,8 +19,13 @@ export const uploadToCloudinary = async (file: Buffer, folder: string = 'ecommer
       (error, result) => {
         if (error) {
           reject(error);
+        } else if (result) {
+          resolve({
+            secure_url: result.secure_url,
+            public_id: result.public_id
+          });
         } else {
-          resolve(result);
+          reject(new Error('Upload failed'));
         }
       }
     ).end(file);
