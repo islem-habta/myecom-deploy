@@ -2,7 +2,9 @@ import db from "@/db/db";
 import { notFound } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, { params: { id } }) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
+  
   if (!id || typeof id !== "string") {
     return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
   }

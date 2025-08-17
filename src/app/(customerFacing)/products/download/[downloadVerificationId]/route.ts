@@ -3,16 +3,16 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  context: { params: { id?: string } }
+  { params }: { params: { downloadVerificationId: string } }
 ) {
-  const id = context.params.id;
+  const { downloadVerificationId } = params;
 
-  if (!id) {
+  if (!downloadVerificationId) {
     return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
   }
 
   const data = await db.downloadVerification.findUnique({
-    where: { id, expiresAt: { gt: new Date() } },
+    where: { id: downloadVerificationId, expiresAt: { gt: new Date() } },
     select: { product: { select: { filePath: true, name: true } } },
   });
 
