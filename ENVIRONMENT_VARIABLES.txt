@@ -1,0 +1,67 @@
+ENVIRONMENT VARIABLES FOR VERCEL
+================================
+
+Copy and paste these into your Vercel dashboard:
+
+1. NEXT_PUBLIC_SERVER_URL
+   Value: https://my-fpzuiyr5x-islems-projects-9bb88426.vercel.app
+   Environment: Production, Preview, Development
+
+2. ADMIN_USERNAME
+   Value: admin
+   Environment: Production, Preview, Development
+
+3. HASHED_ADMIN_PASSWORD
+   Value: $2a$10$placeholder_hashed_password
+   Environment: Production, Preview, Development
+
+4. DATABASE_URL
+   Value: mysql://placeholder:placeholder@placeholder/placeholder?sslaccept=strict
+   Environment: Production, Preview, Development
+
+5. CLOUDINARY_CLOUD_NAME
+   Value: placeholder_cloud_name
+   Environment: Production, Preview, Development
+
+6. CLOUDINARY_API_KEY
+   Value: placeholder_api_key
+   Environment: Production, Preview, Development
+
+7. CLOUDINARY_API_SECRET
+   Value: placeholder_api_secret
+   Environment: Production, Preview, Development
+
+8. STRIPE_SECRET_KEY
+   Value: sk_test_placeholder
+   Environment: Production, Preview, Development
+
+9. NEXT_PUBLIC_STRIPE_PUBLIC_KEY
+   Value: pk_test_placeholder
+   Environment: Production, Preview, Development
+
+10. STRIPE_WEBHOOK_SECRET
+    Value: whsec_placeholder
+    Environment: Production, Preview, Development
+
+11. RESEND_API_KEY
+    Value: re_placeholder
+    Environment: Production, Preview, Development
+
+12. SENDER_EMAIL
+    Value: placeholder@example.com
+    Environment: Production, Preview, Development
+
+INSTRUCTIONS:
+1. Go to https://vercel.com/dashboard
+2. Select your project: my-app
+3. Go to Settings > Environment Variables
+4. Add each variable above
+5. Replace placeholder values with real API keys
+
+SERVICES TO SET UP:
+- PlanetScale: https://planetscale.com (Database)
+- Cloudinary: https://cloudinary.com (File Storage)
+- Stripe: https://stripe.com (Payments)
+- Resend: https://resend.com (Email)
+
+All services have FREE tiers!
