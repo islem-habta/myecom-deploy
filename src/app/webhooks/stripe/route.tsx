@@ -5,7 +5,7 @@ import { Resend } from "resend"
 import PurchaseReceiptEmail from "@/email/PurchaseReceipt"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
-const resend = new Resend(process.env.RESEND_API_KEY as string)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY as string) : null
 
 export async function POST(req: NextRequest) {
   const event = await stripe.webhooks.constructEvent(
@@ -45,18 +45,21 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    await resend.emails.send({
-      from: `Support <${process.env.SENDER_EMAIL}>`,
-      to: email,
-      subject: "Order Confirmation",
-      react: (
-        <PurchaseReceiptEmail
-          order={order}
-          product={product}
-          downloadVerificationId={downloadVerification.id}
-        />
-      ),
-    })
+    // Only send email if Resend is configured
+    if (resend && process.env.SENDER_EMAIL) {
+      await resend.emails.send({
+        from: `Support <${process.env.SENDER_EMAIL}>`,
+        to: email,
+        subject: "Order Confirmation",
+        react: (
+          <PurchaseReceiptEmail
+            order={order}
+            product={product}
+            downloadVerificationId={downloadVerification.id}
+          />
+        ),
+      })
+    }
   }
 
   return new NextResponse()
